@@ -49,4 +49,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     implementation("androidx.preference:preference-ktx:1.2.1")
+
+    implementation("org.osmdroid:osmdroid-android:6.1.10")
+    implementation("com.github.MKergall:osmbonuspack:6.7.0")
 }

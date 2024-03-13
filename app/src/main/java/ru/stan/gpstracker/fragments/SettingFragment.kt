@@ -2,7 +2,6 @@ package ru.stan.gpstracker.fragments
 
 import android.graphics.Color
 import android.os.Bundle
-import android.renderscript.Sampler.Value
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import ru.stan.gpstracker.R
@@ -28,9 +27,9 @@ class SettingFragment : PreferenceFragmentCompat() {
 
     private fun onChangeListener(): Preference.OnPreferenceChangeListener {
         return Preference.OnPreferenceChangeListener { pref, value ->
-            when (pref.key){
+            when (pref.key) {
                 "update_time_key" -> onTimeChange(value.toString())
-                "color_key"-> {
+                "color_key" -> {
                     pref.icon?.setTint(Color.parseColor(value.toString()))
                     showToast("Выбрали цвет: ${getColorName(value.toString())}")
                 }
@@ -38,12 +37,13 @@ class SettingFragment : PreferenceFragmentCompat() {
             true
         }
     }
+
     private fun getColorName(colorValue: String): String {
         return when (colorValue) {
             "#303F9F" -> "Blue"
             "#D32F2F" -> "Red"
             "#FF000000" -> "Black"
-            else -> ""
+            else -> "Неизвестный цвет"
         }
     }
 
