@@ -19,17 +19,17 @@ class LocationService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startNotification()
+        isRunning = true
         return START_STICKY
     }
 
     override fun onCreate() {
         super.onCreate()
-        Log.d("MYLog", "onCreate: ")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d("MYLog", "onDestroy: ")
+        isRunning = false
     }
 
     private fun startNotification() {
@@ -57,5 +57,6 @@ class LocationService : Service() {
 
     companion object {
         const val CHANEL_ID = "chanel_1"
+        var isRunning = false
     }
 }

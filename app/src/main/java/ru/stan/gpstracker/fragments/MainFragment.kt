@@ -18,6 +18,7 @@ import org.osmdroid.config.Configuration
 import org.osmdroid.library.BuildConfig
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
+import ru.stan.gpstracker.R
 import ru.stan.gpstracker.databinding.FragmentMainBinding
 import ru.stan.gpstracker.location.LocationService
 import ru.stan.gpstracker.utils.DialogManager
@@ -26,6 +27,7 @@ import ru.stan.gpstracker.utils.showToast
 
 
 class MainFragment : Fragment() {
+    private var isServiceRunning = false
     private lateinit var pLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var binding: FragmentMainBinding
     // запускаем 1 раз чтоб показывало шоу тост private var isLocationEnabledShown = false
@@ -41,11 +43,48 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         registerPermissions()
+        setOnClicks()
+        checkServiceState()
+    }
+
+    private fun setOnClicks() = with(binding) {
+        val listener = onClicks()
+        icStartStop.setOnClickListener(listener)
+    }
+
+    private fun onClicks(): View.OnClickListener {
+        return View.OnClickListener {
+            when (it.id) {
+                R.id.ic_start_stop -> {
+                    startStopService()
+                }
+            }
+        }
+    }
+
+    private fun startStopService() {
+        if (!isServiceRunning) {
+            startLocService()
+        } else {
+            activity?.stopService(Intent(activity, LocationService::class.java))
+            binding.icStartStop.setImageResource(R.drawable.play)
+        }
+        isServiceRunning = !isServiceRunning
+    }
+
+    private fun checkServiceState() {
+        isServiceRunning = LocationService.isRunning
+        if (isServiceRunning){
+            binding.icStartStop.setImageResource(R.drawable.stop)
+        }
+    }
+    private fun startLocService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             activity?.startForegroundService(Intent(activity, LocationService::class.java))
         } else {
             activity?.startService(Intent(activity, LocationService::class.java))
         }
+        binding.icStartStop.setImageResource(R.drawable.stop)
     }
 
     override fun onResume() {
