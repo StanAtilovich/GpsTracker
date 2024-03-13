@@ -19,6 +19,7 @@ import org.osmdroid.library.BuildConfig
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import ru.stan.gpstracker.databinding.FragmentMainBinding
+import ru.stan.gpstracker.location.LocationService
 import ru.stan.gpstracker.utils.DialogManager
 import ru.stan.gpstracker.utils.checkPermission
 import ru.stan.gpstracker.utils.showToast
@@ -27,7 +28,7 @@ import ru.stan.gpstracker.utils.showToast
 class MainFragment : Fragment() {
     private lateinit var pLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var binding: FragmentMainBinding
-  // запускаем 1 раз чтоб показывало шоу тост private var isLocationEnabledShown = false
+    // запускаем 1 раз чтоб показывало шоу тост private var isLocationEnabledShown = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -40,6 +41,11 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         registerPermissions()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            activity?.startForegroundService(Intent(activity, LocationService::class.java))
+        } else {
+            activity?.startService(Intent(activity, LocationService::class.java))
+        }
     }
 
     override fun onResume() {
